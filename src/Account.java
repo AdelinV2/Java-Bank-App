@@ -4,14 +4,16 @@ public class Account {
     private String username;
     private currencyType currency;
     private double balance;
-    private String accountNumber;
+    private String IBAN;
+    private String pin;
 
 
-    public Account(String username, currencyType currency, String accountNumber){
+    public Account(String username, currencyType currency, String IBAN, String pin){
         this.username = username;
         this.currency = currency;
         this.balance = 0.0;
-        this.accountNumber = accountNumber;
+        this.IBAN = IBAN;
+        this.pin = pin;
     }
 
 
@@ -19,6 +21,10 @@ public class Account {
         this.balance += amount;
     }
 
+
+    public void setPin(String pin) {
+        this.pin = pin;
+    }
 
     public String getUsername() {
         return username;
@@ -35,7 +41,12 @@ public class Account {
     }
 
 
-    public String getAccountNumber() {
-        return accountNumber;
+    public String getIBAN() {
+        return IBAN;
+    }
+
+
+    public String getPin() {
+        return pin;
     }
 }
