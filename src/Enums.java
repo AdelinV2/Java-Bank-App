@@ -17,6 +17,5 @@ public class Enums {
 
     }
 
-
     public enum TransactionType {TRANSFER, WITHDRAW, DEPOSIT}
 }
