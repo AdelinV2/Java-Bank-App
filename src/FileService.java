@@ -46,7 +46,7 @@ public class FileService {
     }
 
 
-    public void appendAccount(Account account) {
+    public void updateAccount(Account account) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(accPath, true))) {
             bw.write(account.getUsername() + "," + account.getCurrency() + "," +
                     account.getIBAN() + "," + account.getPin());
