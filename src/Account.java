@@ -1,14 +1,12 @@
 public class Account {
-    public enum currencyType {EUR, USD, GBP}
-
     private String username;
-    private currencyType currency;
+    private Enums.CurrencyType currency;
     private double balance;
     private String IBAN;
     private String pin;
 
 
-    public Account(String username, currencyType currency, String IBAN, String pin){
+    public Account(String username, Enums.CurrencyType currency, String IBAN, String pin){
         this.username = username;
         this.currency = currency;
         this.balance = 0.0;
@@ -26,12 +24,13 @@ public class Account {
         this.pin = pin;
     }
 
+
     public String getUsername() {
         return username;
     }
 
 
-    public currencyType getCurrency() {
+    public Enums.CurrencyType getCurrency() {
         return currency;
     }
 
