@@ -7,12 +7,12 @@ public class Transaction {
     private double amount;
     private LocalDate date;
     private Enums.TransactionType type;
+    private boolean completedTransaction;
 
 
-    public Transaction(String transactionID, Account accountFrom, Account accountTo,
+    public Transaction(Account accountFrom, Account accountTo,
                        double amount, Enums.TransactionType type)
     {
-        this.transactionID = transactionID;
         this.accountFrom = accountFrom;
         this.accountTo = accountTo;
         this.amount = amount;
@@ -27,9 +27,12 @@ public class Transaction {
                 break;
 
             case TRANSFER:
+                transfer();
                 break;
-
         }
+
+        // TODO save transaction
+
     }
 
 
@@ -40,22 +43,23 @@ public class Transaction {
 
     private void withdraw(){
         // TODO complete withdraw text for GUI
-        if (haveEnoughMoney())
+        if (haveEnoughMoney()) {
             accountFrom.updateBalance(-amount);
-
-        else{
-
+            completedTransaction = true;
         }
 
-        // TODO save transaction for withdraw
+        else{
+            completedTransaction = false;
+
+        }
     }
 
 
     private void deposit(){
         // TODO complete deposit text for GUI
         accountFrom.updateBalance(amount);
+        completedTransaction = true;
 
-        // TODO save transaction for deposit
     }
 
 
@@ -73,12 +77,38 @@ public class Transaction {
                 accountTo.updateBalance(convertedAmount);
 
             }
+
+            completedTransaction = true;
         }
 
         else{
+            completedTransaction = false;
             // TODO complete else if there are not enough money to transfer
         }
+    }
 
-        //TODO save transaction for transfer
+
+    public String getTransactionID() {
+        return transactionID;
+    }
+
+
+    public Account getAccountFrom() {
+        return accountFrom;
+    }
+
+
+    public Account getAccountTo() {
+        return accountTo;
+    }
+
+
+    public double getAmount() {
+        return amount;
+    }
+
+
+    public Enums.TransactionType getType() {
+        return type;
     }
 }
