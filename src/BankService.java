@@ -2,7 +2,7 @@ import java.util.*;
 
 public class BankService {
     private Map<String, Account> accounts = new HashMap<>();
-    private Map<String, Transaction> transactions = new HashMap<>();
+    private List<Transaction> transactions = new ArrayList<>();
     private FileService fileService = new FileService();
 
 
@@ -24,11 +24,8 @@ public class BankService {
                                 double amount, Enums.TransactionType type)
     {
         Transaction newTransaction = new Transaction(accountFrom, accountTo, amount, type);
-        transactions.put(transactionID, newTransaction);
+        transactions.add(newTransaction); // adăugat tranzacția în listă
 
-        Map<String, Transaction> newTransactionMap = new HashMap<>();
-        newTransactionMap.put(transactionID, newTransaction);
-
-        fileService.updateTransactions(newTransactionMap);
+        fileService.updateTransactions(transactions);
     }
 }

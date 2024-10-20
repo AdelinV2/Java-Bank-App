@@ -57,25 +57,20 @@ public class FileService {
     }
 
 
-    public Map<String, Transaction> loadTransactions() {
-        Map<String, Transaction> transactions = new HashMap<>();
-
+    public List<Transaction> loadTransactions() {
+        List<Transaction> transactions = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(trsPath))) {
             String line;
-
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
-
                 String transactionID = parts[0];
                 Account accountFrom = new Account(parts[1], Enums.CurrencyType.valueOf(parts[2]), parts[3], null);
                 Account accountTo = new Account(parts[4], Enums.CurrencyType.valueOf(parts[5]), parts[6], null);
                 double amount = Double.parseDouble(parts[7]);
                 Enums.TransactionType type = Enums.TransactionType.valueOf(parts[8]);
-
                 Transaction transaction = new Transaction(accountFrom, accountTo, amount, type);
-                transactions.put(transactionID, transaction);
+                transactions.add(transaction);
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -83,9 +78,9 @@ public class FileService {
     }
 
 
-    public void saveTransactions(Map<String, Transaction> transactions) {
+    public void saveTransactions(List<Transaction> transactions) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(trsPath))) {
-            for (Transaction transaction : transactions.values()) {
+            for (Transaction transaction : transactions) {
                 bw.write(transaction.getTransactionID() + "," +
                         transaction.getAccountFrom().getIBAN() + "," +
                         transaction.getAccountFrom().getCurrency() + "," +
@@ -95,28 +90,13 @@ public class FileService {
                         transaction.getType());
                 bw.newLine();
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
 
-    public void updateTransactions(Map<String, Transaction> newTransactions) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(trsPath, true))) {
-            for (Transaction transaction : newTransactions.values()) {
-                bw.write(transaction.getTransactionID() + "," +
-                        transaction.getAccountFrom().getIBAN() + "," +
-                        transaction.getAccountFrom().getCurrency() + "," +
-                        transaction.getAccountTo().getIBAN() + "," +
-                        transaction.getAccountTo().getCurrency() + "," +
-                        transaction.getAmount() + "," +
-                        transaction.getType());
-                bw.newLine();
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void updateTransactions(List<Transaction> newTransactions) {
+        saveTransactions(newTransactions);
     }
 }
