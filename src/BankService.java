@@ -20,6 +20,19 @@ public class BankService {
     }
 
 
+    public String generateIBAN(){
+        String countryCode = "RO";
+        String bankCode = "1234";
+        String accountNumber = String.format("%016d", new Random().nextLong((long) Math.pow(10, 16)));
+        return countryCode + bankCode + accountNumber;
+    }
+
+
+    public String generateTransactionID(Enums.TransactionType type){
+        return type.name() + String.format("%012d", new Random().nextLong((long) Math.pow(10, 12)));
+    }
+
+
     public void makeTransaction(String transactionID, Account accountFrom, Account accountTo,
                                 double amount, Enums.TransactionType type)
     {
