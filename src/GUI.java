@@ -32,8 +32,7 @@ public class GUI {
         });
         logInButton.addActionListener(e -> {
             clearPanel();
-            // TODO create log in function
-
+            logInInterface();
         });
 
         addButton(createAccButton, 0, 1);
@@ -48,9 +47,61 @@ public class GUI {
         JButton submitButton = new JButton("Submit");
         JLabel usernameLabel = new JLabel("Username: ");
         JLabel currencyLabel = new JLabel("Currency: ");
+        JLabel pinLabel = new JLabel("PIN: ");
+        JTextField usernameField = new JTextField(15);
+        JTextField pinField = new JTextField(4);
+        JComboBox<String> cuurencyBox = new JComboBox<>(getCurrencyOptionsAsString());
+
+        String username;
+        Enums.CurrencyType currency;
+        String pin;
+
+
+        returnButton.addActionListener(e -> {
+            clearPanel();
+            startInterface();
+        });
+        submitButton.addActionListener(e -> {
+            // TODO verify and add account
+        });
 
         addButton(returnButton, 0, 3);
         addButton(submitButton, 1, 3);
+
+        addComponent(usernameLabel, 0, 0);
+        addComponent(usernameField, 1, 0);
+        addComponent(currencyLabel, 0, 1);
+        addComponent(cuurencyBox, 1, 1);
+        addComponent(pinLabel, 0, 2);
+        addComponent(pinField, 1, 2);
+
+        frame.pack();
+    }
+
+
+    public void logInInterface(){
+        JButton returnButton = new JButton("Return");
+        JButton submitButton = new JButton("Submit");
+        JLabel ibanLabel = new JLabel("IBAN: ");
+        JLabel pinLabel = new JLabel("PIN: ");
+        JTextField ibanField = new JTextField(24);
+        JTextField pinField = new JTextField(4);
+
+        returnButton.addActionListener(e -> {
+            clearPanel();
+            startInterface();
+        });
+        submitButton.addActionListener(e -> {
+            // TODO verify details and log in, else error
+        });
+
+        addButton(returnButton, 0, 2);
+        addButton(submitButton, 1, 2);
+
+        addComponent(ibanLabel, 0, 0);
+        addComponent(ibanField, 1, 0);
+        addComponent(pinLabel, 0, 1);
+        addComponent(pinField, 1, 1);
 
         frame.pack();
     }
@@ -70,10 +121,34 @@ public class GUI {
     }
 
 
+    public void addComponent(JComponent component, int x, int y){
+        gbc.gridx = x;
+        gbc.gridy = y;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+        gbc.insets = new Insets(10, 0 ,10, 0);
+        gbc.anchor = GridBagConstraints.CENTER;
+
+        panel.add(component, gbc);
+    }
+
+
     public void clearPanel(){
         panel.removeAll();
         panel.revalidate();
         panel.repaint();
+    }
+
+
+    private String[] getCurrencyOptionsAsString() {
+        Enums.CurrencyType[] currencies = Enums.CurrencyType.values();
+        String[] options = new String[currencies.length];
+
+        for (int i = 0; i < currencies.length; i++) {
+            options[i] = currencies[i].name();
+        }
+
+        return options;
     }
 
 }
