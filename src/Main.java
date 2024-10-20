@@ -1,7 +1,9 @@
 
 public class Main {
     public static void main(String[] args) {
-        GUI appGUI = new GUI();
+        BankService bank = new BankService();
+        GUI appGUI = new GUI(bank);
+
         appGUI.startInterface();
     }
 }

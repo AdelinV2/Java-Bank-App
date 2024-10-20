@@ -5,16 +5,19 @@ public class GUI {
     private JFrame frame = new JFrame();
     private JPanel panel = new JPanel();
     private GridBagConstraints gbc = new GridBagConstraints();
+    private BankService bank;
 
 
-    public GUI(){
+    public GUI(BankService bank){
+        this.bank = bank;
+
         panel.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
         panel.setLayout(new GridBagLayout());
 
         frame.add(panel, BorderLayout.CENTER);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Java Bank App");
-        frame.setPreferredSize(new Dimension(300, 300));
+        frame.setPreferredSize(new Dimension(420, 300));
         frame.setResizable(false);
 
         frame.pack();
@@ -38,6 +41,10 @@ public class GUI {
         addButton(createAccButton, 0, 1);
         addButton(logInButton, 0, 2);
 
+        // TODO delete these 2 lines bellow
+        //clearPanel();
+        //selectionInterface();
+
         frame.pack();
     }
 
@@ -50,19 +57,30 @@ public class GUI {
         JLabel pinLabel = new JLabel("PIN: ");
         JTextField usernameField = new JTextField(15);
         JTextField pinField = new JTextField(4);
-        JComboBox<String> cuurencyBox = new JComboBox<>(getCurrencyOptionsAsString());
-
-        String username;
-        Enums.CurrencyType currency;
-        String pin;
-
+        JComboBox<String> currencyBox = new JComboBox<>(getCurrencyOptionsAsString());
 
         returnButton.addActionListener(e -> {
             clearPanel();
             startInterface();
         });
+
         submitButton.addActionListener(e -> {
-            // TODO verify and add account
+            String username = usernameField.getText();
+            Enums.CurrencyType currency = Enums.CurrencyType.valueOf((String) currencyBox.getSelectedItem());
+            String pin = pinField.getText();
+
+            if (isValidPin(pin)){
+                String iban = this.bank.generateIBAN();
+                this.bank.createAccount(username, currency, iban, pin);
+                JOptionPane.showMessageDialog(frame, "Your IBAN is: " + iban);
+
+                clearPanel();
+                selectionInterface();
+            }
+
+            else{
+                pinField.setText("");
+            }
         });
 
         addButton(returnButton, 0, 3);
@@ -71,7 +89,7 @@ public class GUI {
         addComponent(usernameLabel, 0, 0);
         addComponent(usernameField, 1, 0);
         addComponent(currencyLabel, 0, 1);
-        addComponent(cuurencyBox, 1, 1);
+        addComponent(currencyBox, 1, 1);
         addComponent(pinLabel, 0, 2);
         addComponent(pinField, 1, 2);
 
@@ -84,15 +102,34 @@ public class GUI {
         JButton submitButton = new JButton("Submit");
         JLabel ibanLabel = new JLabel("IBAN: ");
         JLabel pinLabel = new JLabel("PIN: ");
-        JTextField ibanField = new JTextField(24);
+        JTextField ibanField = new JTextField(25);
         JTextField pinField = new JTextField(4);
 
         returnButton.addActionListener(e -> {
             clearPanel();
             startInterface();
         });
+
         submitButton.addActionListener(e -> {
             // TODO verify details and log in, else error
+            String iban = ibanField.getText();
+            String pin = pinField.getText();
+            Account account = this.bank.findAccount(iban);
+
+            if(account != null){
+                if(account.getPin().equals(pin)){
+                    clearPanel();
+                    selectionInterface();
+                }
+                else{
+                    pinField.setText("");
+                    JOptionPane.showMessageDialog(frame, "Incorrect PIN!" + account.getPin());
+                }
+            }
+
+            else
+                JOptionPane.showMessageDialog(frame, "Account not found!");
+
         });
 
         addButton(returnButton, 0, 2);
@@ -102,6 +139,38 @@ public class GUI {
         addComponent(ibanField, 1, 0);
         addComponent(pinLabel, 0, 1);
         addComponent(pinField, 1, 1);
+
+        frame.pack();
+    }
+
+
+    public void selectionInterface(){
+        JButton accountInfoButton = new JButton("Account Info");
+        JButton withdrawButton = new JButton("Withdraw");
+        JButton depositButton = new JButton("Deposit");
+        JButton returnButton = new JButton("Return");
+
+        addButton(accountInfoButton, 0, 0);
+        addButton(withdrawButton, 1, 0);
+        addButton(depositButton, 2, 0);
+        addButton(returnButton, 1,1);
+
+        returnButton.addActionListener(e -> {
+            clearPanel();
+            startInterface();
+        });
+
+        accountInfoButton.addActionListener(e -> {
+            // TODO account info function
+        });
+
+        withdrawButton.addActionListener(e -> {
+            // TODO withdraw function
+        });
+
+        depositButton.addActionListener(e -> {
+            // TODO deposit function
+        });
 
         frame.pack();
     }
@@ -137,6 +206,22 @@ public class GUI {
         panel.removeAll();
         panel.revalidate();
         panel.repaint();
+    }
+
+
+    public boolean isValidPin(String pin){
+        if (pin.length() != 4){
+            JOptionPane.showMessageDialog(frame, "PIN must be of length 4!");
+            return false;
+        }
+
+        for(char c : pin.toCharArray()){
+            if(!Character.isDigit(c)) {
+                JOptionPane.showMessageDialog(frame, "PIN must contain only digits!");
+                return false;
+            }
+        }
+        return true;
     }
 
 

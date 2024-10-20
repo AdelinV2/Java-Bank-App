@@ -12,6 +12,11 @@ public class BankService {
     }
 
 
+    public Account findAccount(String iban){
+        return accounts.get(iban);
+    }
+
+
     public void createAccount(String username, Enums.CurrencyType currency, String IBAN, String pin){
         Account newAccount = new Account(username, currency, IBAN, pin);
         accounts.put(IBAN, newAccount);
