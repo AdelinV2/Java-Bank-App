@@ -75,7 +75,7 @@ public class GUI {
                 JOptionPane.showMessageDialog(frame, "Your IBAN is: " + iban);
 
                 clearPanel();
-                selectionInterface();
+                startInterface();
             }
 
             else{
@@ -111,7 +111,6 @@ public class GUI {
         });
 
         submitButton.addActionListener(e -> {
-            // TODO verify details and log in, else error
             String iban = ibanField.getText();
             String pin = pinField.getText();
             Account account = this.bank.findAccount(iban);
@@ -119,7 +118,7 @@ public class GUI {
             if(account != null){
                 if(account.getPin().equals(pin)){
                     clearPanel();
-                    selectionInterface();
+                    selectionInterface(account);
                 }
                 else{
                     pinField.setText("");
@@ -144,7 +143,7 @@ public class GUI {
     }
 
 
-    public void selectionInterface(){
+    public void selectionInterface(Account account){
         JButton accountInfoButton = new JButton("Account Info");
         JButton withdrawButton = new JButton("Withdraw");
         JButton depositButton = new JButton("Deposit");
@@ -154,6 +153,7 @@ public class GUI {
         addButton(withdrawButton, 1, 0);
         addButton(depositButton, 2, 0);
         addButton(returnButton, 1,1);
+
 
         returnButton.addActionListener(e -> {
             clearPanel();
@@ -166,10 +166,47 @@ public class GUI {
 
         withdrawButton.addActionListener(e -> {
             // TODO withdraw function
+            clearPanel();
+            withdrawInterface(account);
         });
 
         depositButton.addActionListener(e -> {
             // TODO deposit function
+        });
+
+        frame.pack();
+    }
+
+
+    public void withdrawInterface(Account account){
+        JButton returnButton = new JButton("Return");
+        JButton withdrawButton = new JButton("Withdraw");
+        JLabel amountToWithdraw = new JLabel("Amount to withdraw");
+        JTextField amountField = new JTextField(15);
+
+        addButton(returnButton, 0, 3);
+        addButton(withdrawButton, 1, 3);
+        addComponent(amountToWithdraw, 0,0);
+        addComponent(amountField, 1, 0);
+
+        returnButton.addActionListener(e -> {
+            clearPanel();
+            selectionInterface(account);
+        });
+
+        withdrawButton.addActionListener(e -> {
+            Integer amount = getInt(amountField.getText());
+            if (amount > 0) {
+                String transID = this.bank.generateTransactionID(Enums.TransactionType.WITHDRAW);
+                this.bank.makeTransaction(transID, account, null, amount, Enums.TransactionType.WITHDRAW);
+                if (this.bank.findTransaction(transID).isCompletedTransaction()){
+                    JOptionPane.showMessageDialog(frame, "Transaction successful!");
+                }
+                else{
+                    JOptionPane.showMessageDialog(frame, "Transaction was canceled!");
+                }
+            }
+
         });
 
         frame.pack();
@@ -222,6 +259,16 @@ public class GUI {
             }
         }
         return true;
+    }
+
+
+    public Integer getInt(String text){
+        try {
+            return Integer.parseInt(text);
+        } catch (NumberFormatException e){
+            JOptionPane.showMessageDialog(frame, "You can only type numbers!");
+            return null;
+        }
     }
 
 

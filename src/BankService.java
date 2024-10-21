@@ -12,6 +12,17 @@ public class BankService {
     }
 
 
+    public Transaction findTransaction(String id){
+        for (Transaction transaction : transactions) {
+            String transId = transaction.getTransactionID();
+            if (transId != null && transId.equals(id)) {
+                return transaction;
+            }
+        }
+        return null;
+    }
+
+
     public Account findAccount(String iban){
         return accounts.get(iban);
     }
@@ -42,7 +53,8 @@ public class BankService {
                                 double amount, Enums.TransactionType type)
     {
         Transaction newTransaction = new Transaction(accountFrom, accountTo, amount, type);
-        transactions.add(newTransaction); // adăugat tranzacția în listă
+        newTransaction.setTransactionID(transactionID);
+        transactions.add(newTransaction);
 
         fileService.updateTransactions(transactions);
     }

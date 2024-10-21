@@ -68,6 +68,7 @@ public class FileService {
                 Account accountTo = new Account(parts[4], Enums.CurrencyType.valueOf(parts[5]), parts[6], null);
                 double amount = Double.parseDouble(parts[7]);
                 Enums.TransactionType type = Enums.TransactionType.valueOf(parts[8]);
+                boolean completed = Boolean.parseBoolean(parts[9]);
                 Transaction transaction = new Transaction(accountFrom, accountTo, amount, type);
                 transactions.add(transaction);
             }
@@ -81,13 +82,25 @@ public class FileService {
     public void saveTransactions(List<Transaction> transactions) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(trsPath))) {
             for (Transaction transaction : transactions) {
-                bw.write(transaction.getTransactionID() + "," +
-                        transaction.getAccountFrom().getIBAN() + "," +
-                        transaction.getAccountFrom().getCurrency() + "," +
-                        transaction.getAccountTo().getIBAN() + "," +
-                        transaction.getAccountTo().getCurrency() + "," +
-                        transaction.getAmount() + "," +
-                        transaction.getType());
+                if(transaction.getAccountTo() != null) {
+                    bw.write(transaction.getTransactionID() + "," +
+                            transaction.getAccountFrom().getIBAN() + "," +
+                            transaction.getAccountFrom().getCurrency() + "," +
+                            transaction.getAccountTo().getIBAN() + "," +
+                            transaction.getAccountTo().getCurrency() + "," +
+                            transaction.getAmount() + "," +
+                            transaction.getType() + "," +
+                            transaction.isCompletedTransaction());
+                }
+                else{
+                    bw.write(transaction.getTransactionID() + "," +
+                            transaction.getAccountFrom().getIBAN() + "," +
+                            transaction.getAccountFrom().getCurrency() + "," +
+                            "null,null," +
+                            transaction.getAmount() + "," +
+                            transaction.getType() + "," +
+                            transaction.isCompletedTransaction());
+                }
                 bw.newLine();
             }
         } catch (IOException e) {

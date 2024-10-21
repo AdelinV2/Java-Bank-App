@@ -16,6 +16,7 @@ public class Transaction {
         this.accountFrom = accountFrom;
         this.accountTo = accountTo;
         this.amount = amount;
+        this.type = type;
 
         switch (type){
             case WITHDRAW:
@@ -50,7 +51,6 @@ public class Transaction {
 
         else{
             completedTransaction = false;
-
         }
     }
 
@@ -88,6 +88,10 @@ public class Transaction {
     }
 
 
+    public void setTransactionID(String transactionID) {
+        this.transactionID = transactionID;
+    }
+
     public String getTransactionID() {
         return transactionID;
     }
@@ -107,6 +111,9 @@ public class Transaction {
         return amount;
     }
 
+    public boolean isCompletedTransaction() {
+        return completedTransaction;
+    }
 
     public Enums.TransactionType getType() {
         return type;
