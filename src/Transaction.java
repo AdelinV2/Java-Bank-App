@@ -17,6 +17,7 @@ public class Transaction {
         this.accountTo = accountTo;
         this.amount = amount;
         this.type = type;
+        this.date = LocalDate.now();
 
         switch (type){
             case WITHDRAW:
@@ -113,6 +114,10 @@ public class Transaction {
 
     public boolean isCompletedTransaction() {
         return completedTransaction;
+    }
+
+    public LocalDate getDate() {
+        return date;
     }
 
     public Enums.TransactionType getType() {

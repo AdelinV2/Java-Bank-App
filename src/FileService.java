@@ -64,11 +64,17 @@ public class FileService {
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
                 String transactionID = parts[0];
-                Account accountFrom = new Account(parts[1], Enums.CurrencyType.valueOf(parts[2]), parts[3], null);
-                Account accountTo = new Account(parts[4], Enums.CurrencyType.valueOf(parts[5]), parts[6], null);
-                double amount = Double.parseDouble(parts[7]);
-                Enums.TransactionType type = Enums.TransactionType.valueOf(parts[8]);
-                boolean completed = Boolean.parseBoolean(parts[9]);
+                Account accountFrom = new Account(null, Enums.CurrencyType.valueOf(parts[2]), parts[1], null);
+                Account accountTo;
+                if(!parts[3].equals("null")) {
+                    accountTo = new Account(null, Enums.CurrencyType.valueOf(parts[4]), parts[3], null);
+                }
+                else{
+                    accountTo = new Account(null,null,null,null);
+                }
+                double amount = Double.parseDouble(parts[5]);
+                Enums.TransactionType type = Enums.TransactionType.valueOf(parts[6]);
+                boolean completed = Boolean.parseBoolean(parts[7]);
                 Transaction transaction = new Transaction(accountFrom, accountTo, amount, type);
                 transactions.add(transaction);
             }
@@ -90,7 +96,8 @@ public class FileService {
                             transaction.getAccountTo().getCurrency() + "," +
                             transaction.getAmount() + "," +
                             transaction.getType() + "," +
-                            transaction.isCompletedTransaction());
+                            transaction.isCompletedTransaction() + "," +
+                            transaction.getDate());
                 }
                 else{
                     bw.write(transaction.getTransactionID() + "," +
@@ -99,7 +106,8 @@ public class FileService {
                             "null,null," +
                             transaction.getAmount() + "," +
                             transaction.getType() + "," +
-                            transaction.isCompletedTransaction());
+                            transaction.isCompletedTransaction()+ "," +
+                            transaction.getDate());
                 }
                 bw.newLine();
             }
