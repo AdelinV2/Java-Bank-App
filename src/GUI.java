@@ -165,13 +165,49 @@ public class GUI {
         });
 
         withdrawButton.addActionListener(e -> {
-            // TODO withdraw function
             clearPanel();
             withdrawInterface(account);
         });
 
         depositButton.addActionListener(e -> {
-            // TODO deposit function
+            clearPanel();
+            depositInterface(account);
+        });
+
+        frame.pack();
+    }
+
+
+    public void depositInterface(Account account){
+        JButton returnButton = new JButton("Return");
+        JButton depositButton = new JButton("Deposit");
+        JLabel amountToDeposit = new JLabel("Amount to deposit");
+        JTextField amountField = new JTextField(15);
+
+        addButton(returnButton, 0, 3);
+        addButton(depositButton,1,3);
+        addComponent(amountToDeposit, 0, 0);
+        addComponent(amountField, 1, 0);
+
+        returnButton.addActionListener(e -> {
+            clearPanel();
+            selectionInterface(account);
+        });
+
+        depositButton.addActionListener(e -> {
+            Integer amount = getInt(amountField.getText());
+            if(amount > 0) {
+                String transID = this.bank.generateTransactionID(Enums.TransactionType.DEPOSIT);
+                this.bank.makeTransaction(transID, account, null, amount, Enums.TransactionType.DEPOSIT);
+                if(this.bank.findTransaction(transID).isCompletedTransaction()){
+                    JOptionPane.showMessageDialog(frame, "Deposit was successful");
+                    clearPanel();
+                    selectionInterface(account);
+                }
+                else{
+                    JOptionPane.showMessageDialog(frame, "Deposit was canceled!");
+                }
+            }
         });
 
         frame.pack();
@@ -201,12 +237,13 @@ public class GUI {
                 this.bank.makeTransaction(transID, account, null, amount, Enums.TransactionType.WITHDRAW);
                 if (this.bank.findTransaction(transID).isCompletedTransaction()){
                     JOptionPane.showMessageDialog(frame, "Transaction successful!");
+                    clearPanel();
+                    selectionInterface(account);
                 }
                 else{
                     JOptionPane.showMessageDialog(frame, "Transaction was canceled!");
                 }
             }
-
         });
 
         frame.pack();

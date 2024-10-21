@@ -6,10 +6,10 @@ public class Account {
     private String pin;
 
 
-    public Account(String username, Enums.CurrencyType currency, String IBAN, String pin){
+    public Account(String username, Enums.CurrencyType currency, String IBAN, String pin, double balance){
         this.username = username;
         this.currency = currency;
-        this.balance = 0.0;
+        this.balance = balance;
         this.IBAN = IBAN;
         this.pin = pin;
     }

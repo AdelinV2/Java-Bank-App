@@ -29,7 +29,7 @@ public class BankService {
 
 
     public void createAccount(String username, Enums.CurrencyType currency, String IBAN, String pin){
-        Account newAccount = new Account(username, currency, IBAN, pin);
+        Account newAccount = new Account(username, currency, IBAN, pin, 0.0);
         accounts.put(IBAN, newAccount);
         fileService.updateAccount(newAccount);
 

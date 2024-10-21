@@ -28,7 +28,7 @@ public class Transaction {
                 deposit();
                 break;
 
-            case TRANSFER:
+            case TRANSFER_TO:
                 transfer();
                 break;
         }
