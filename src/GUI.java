@@ -17,7 +17,7 @@ public class GUI {
         frame.add(panel, BorderLayout.CENTER);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Java Bank App");
-        frame.setPreferredSize(new Dimension(420, 300));
+        frame.setPreferredSize(new Dimension(500, 350));
         frame.setResizable(false);
 
         frame.pack();
@@ -40,10 +40,6 @@ public class GUI {
 
         addButton(createAccButton, 0, 1);
         addButton(logInButton, 0, 2);
-
-        // TODO delete these 2 lines bellow
-        //clearPanel();
-        //selectionInterface();
 
         frame.pack();
     }
@@ -122,7 +118,7 @@ public class GUI {
                 }
                 else{
                     pinField.setText("");
-                    JOptionPane.showMessageDialog(frame, "Incorrect PIN!" + account.getPin());
+                    JOptionPane.showMessageDialog(frame, "Incorrect PIN!");
                 }
             }
 
@@ -147,12 +143,14 @@ public class GUI {
         JButton accountInfoButton = new JButton("Account Info");
         JButton withdrawButton = new JButton("Withdraw");
         JButton depositButton = new JButton("Deposit");
+        JButton transferButton = new JButton("Transfer");
         JButton returnButton = new JButton("Return");
 
         addButton(accountInfoButton, 0, 0);
-        addButton(withdrawButton, 1, 0);
-        addButton(depositButton, 2, 0);
-        addButton(returnButton, 1,1);
+        addButton(transferButton, 0, 1);
+        addButton(withdrawButton, 2, 0);
+        addButton(depositButton, 2, 1);
+        addButton(returnButton, 1,2);
 
 
         returnButton.addActionListener(e -> {
@@ -172,6 +170,50 @@ public class GUI {
         depositButton.addActionListener(e -> {
             clearPanel();
             depositInterface(account);
+        });
+
+        frame.pack();
+    }
+
+
+    public void transferInterface(Account account){
+        JButton transferButton = new JButton("Transfer");
+        JButton returnButton = new JButton("Return");
+        JLabel amountToTransfer = new JLabel("Amount to transfer");
+        JTextField amountField = new JTextField(15);
+
+        addButton(returnButton, 0,1);
+        addButton(transferButton, 1, 1);
+        addComponent(amountToTransfer, 0, 0);
+        addComponent(amountField, 1,0);
+
+        returnButton.addActionListener(e -> {
+            selectionInterface(account);
+        });
+
+        transferButton.addActionListener(e -> {
+            Account accountTo = this.bank.findAccount(amountField.getText());
+            if (accountTo != null) {
+                Integer amount = getInt(amountField.getText());
+                if (amount > 0) {
+                    String transID = this.bank.generateTransactionID(Enums.TransactionType.TRANSFER_TO);
+                    this.bank.makeTransaction(transID, account, accountTo, amount, Enums.TransactionType.TRANSFER_TO);
+                    if (this.bank.findTransaction(transID).isCompletedTransaction()){
+                        this.bank.makeTransaction(this.bank.generateTransactionID(Enums.TransactionType.TRANSFER_FROM),
+                                accountTo, account, amount, Enums.TransactionType.TRANSFER_FROM);
+                        JOptionPane.showMessageDialog(frame, "Transaction successful!");
+                        clearPanel();
+                        selectionInterface(account);
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(frame, "Transaction was canceled!");
+                    }
+                }
+            }
+
+            else{
+                JOptionPane.showMessageDialog(frame, "Account not found!");
+            }
         });
 
         frame.pack();
@@ -258,7 +300,12 @@ public class GUI {
         gbc.insets = new Insets(10, 0, 10, 0);
         gbc.anchor = GridBagConstraints.CENTER;
 
+        Dimension size = new Dimension(160, 26);
+
         button.setFocusPainted(false);
+        button.setPreferredSize(size);
+        button.setMaximumSize(size);
+        button.setMinimumSize(size);
 
         panel.add(button, gbc);
     }
