@@ -185,7 +185,28 @@ public class GUI {
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
 
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        frame.add(scrollPane, BorderLayout.CENTER);
 
+        addButton(returnButton, 0,1);
+
+        returnButton.addActionListener(e -> {
+            clearPanel();
+            selectionInterface(account);
+        });
+
+        for(Transaction transaction : this.bank.findTransactionsByIBAN(account.getIBAN())){
+            if(transaction.getType() == Enums.TransactionType.TRANSFER_TO ||
+                    transaction.getType() == Enums.TransactionType.TRANSFER_FROM){
+                textArea.append(String.valueOf(transaction.getType()) + " | " + transaction.getAccountFrom().getIBAN() +
+                        " | " + transaction.getAmount() + transaction.getAccountTo().getCurrency() + " | " +
+                        transaction.getDate() + "\n");
+            }
+            else {
+                textArea.append(String.valueOf(transaction.getType()) + " | " + transaction.getAmount() +
+                        transaction.getAccountTo().getCurrency() + " | " + transaction.getDate() + "\n");
+            }
+        }
 
 
         frame.pack();
