@@ -23,13 +23,16 @@ public class BankService {
     }
 
 
-    public Transaction findTransactionByIBAN(String iban){
+    public List<Transaction> findTransactionsByIBAN(String iban){
+        List<Transaction> transactionList = new ArrayList<>();
+
         for(Transaction transaction : transactions){
             String transIban = transaction.getAccountFrom().getIBAN();
             if(transIban != null && transIban.equals(iban))
-                return transaction;
+                transactionList.add(transaction);
         }
-        return null;
+
+        return transactionList;
     }
 
 
