@@ -159,7 +159,8 @@ public class GUI {
         });
 
         accountInfoButton.addActionListener(e -> {
-            // TODO account info function
+            clearPanel();
+            accountInfoInterface(account);
         });
 
         withdrawButton.addActionListener(e -> {
@@ -170,6 +171,49 @@ public class GUI {
         depositButton.addActionListener(e -> {
             clearPanel();
             depositInterface(account);
+        });
+
+        frame.pack();
+    }
+
+
+    void bankStatementInterface(Account account){
+        JButton returnButton = new JButton("Return");
+        JTextArea textArea = new JTextArea();
+        JScrollPane scrollPane = new JScrollPane(textArea);
+
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+
+
+
+
+        frame.pack();
+    }
+
+
+    public void accountInfoInterface(Account account){
+        JButton returnButton = new JButton("Return");
+        JButton generateBankStatement = new JButton("Bank Statement");
+        JLabel usernameLabel = new JLabel("Username:");
+        JLabel usernameField = new JLabel(account.getUsername());
+        JLabel balanceLabel = new JLabel("Balance:");
+        JLabel balanceField = new JLabel(String.valueOf(account.getBalance()) + " " + account.getCurrency());
+
+        addButton(generateBankStatement,1,2);
+        addButton(returnButton, 0,2);
+        addComponent(usernameLabel, 0,0);
+        addComponent(usernameField, 1, 0);
+        addComponent(balanceLabel, 0, 1);
+        addComponent(balanceField,1,1);
+
+        returnButton.addActionListener(e -> {
+            clearPanel();
+            selectionInterface(account);
+        });
+
+        generateBankStatement.addActionListener(e -> {
+            // TODO generateBankStatement function
         });
 
         frame.pack();
