@@ -19,9 +19,9 @@ public class FileService {
                 Enums.CurrencyType currency = Enums.CurrencyType.valueOf(parts[1]);
                 String IBAN = parts[2];
                 String pin = parts[3];
-                double balanace = Double.parseDouble(parts[4]);
+                double balance = Double.parseDouble(parts[4]);
 
-                Account account = new Account(username, currency, IBAN, pin, balanace);
+                Account account = new Account(username, currency, IBAN, pin, balance);
                 accountMap.put(IBAN, account);
             }
 
@@ -50,7 +50,7 @@ public class FileService {
     public void updateAccount(Account account) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(accPath, true))) {
             bw.write(account.getUsername() + "," + account.getCurrency() + "," +
-                    account.getIBAN() + "," + account.getPin());
+                    account.getIBAN() + "," + account.getPin() + "," + account.getBalance());
             bw.newLine();
         } catch (IOException e) {
             e.printStackTrace();
@@ -60,6 +60,7 @@ public class FileService {
 
     public List<Transaction> loadTransactions() {
         List<Transaction> transactions = new ArrayList<>();
+
         try (BufferedReader br = new BufferedReader(new FileReader(trsPath))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -67,12 +68,14 @@ public class FileService {
                 String transactionID = parts[0];
                 Account accountFrom = new Account(null, Enums.CurrencyType.valueOf(parts[2]), parts[1], null, 0);
                 Account accountTo;
+
                 if(!parts[3].equals("null")) {
                     accountTo = new Account(null, Enums.CurrencyType.valueOf(parts[4]), parts[3], null, 0);
                 }
                 else{
                     accountTo = new Account(null,null,null,null, 0);
                 }
+
                 double amount = Double.parseDouble(parts[5]);
                 Enums.TransactionType type = Enums.TransactionType.valueOf(parts[6]);
                 boolean completed = Boolean.parseBoolean(parts[7]);

@@ -21,6 +21,11 @@ public class BankService {
         }
         return null;
     }
+    
+
+    public void saveAccountsAfterTransactions(){
+        fileService.saveAccounts(accounts);
+    }
 
 
     public List<Transaction> findTransactionsByIBAN(String iban){
@@ -45,7 +50,6 @@ public class BankService {
         Account newAccount = new Account(username, currency, IBAN, pin, 0.0);
         accounts.put(IBAN, newAccount);
         fileService.updateAccount(newAccount);
-
     }
 
 

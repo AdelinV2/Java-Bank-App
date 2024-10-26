@@ -173,6 +173,11 @@ public class GUI {
             depositInterface(account);
         });
 
+        transferButton.addActionListener(e -> {
+            clearPanel();
+            transferInterface(account);
+        });
+
         frame.pack();
     }
 
@@ -186,9 +191,10 @@ public class GUI {
         textArea.setWrapStyleWord(true);
 
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        frame.add(scrollPane, BorderLayout.CENTER);
+        //frame.add(scrollPane, BorderLayout.CENTER);
 
         addButton(returnButton, 0,1);
+        addComponent(textArea, 0,0);
 
         returnButton.addActionListener(e -> {
             clearPanel();
@@ -198,16 +204,17 @@ public class GUI {
         for(Transaction transaction : this.bank.findTransactionsByIBAN(account.getIBAN())){
             if(transaction.getType() == Enums.TransactionType.TRANSFER_TO ||
                     transaction.getType() == Enums.TransactionType.TRANSFER_FROM){
-                textArea.append(String.valueOf(transaction.getType()) + " | " + transaction.getAccountFrom().getIBAN() +
-                        " | " + transaction.getAmount() + transaction.getAccountTo().getCurrency() + " | " +
+
+                textArea.append(String.valueOf(transaction.getType()) + " | " + transaction.getAccountTo().getIBAN() +
+                        " | " + transaction.getAmount() + String.valueOf(transaction.getAccountFrom().getCurrency()) + " | " +
                         transaction.getDate() + "\n");
+
             }
             else {
                 textArea.append(String.valueOf(transaction.getType()) + " | " + transaction.getAmount() +
-                        transaction.getAccountTo().getCurrency() + " | " + transaction.getDate() + "\n");
+                        String.valueOf(transaction.getAccountFrom().getCurrency()) + " | " + transaction.getDate() + "\n");
             }
         }
-
 
         frame.pack();
     }
@@ -234,7 +241,8 @@ public class GUI {
         });
 
         generateBankStatement.addActionListener(e -> {
-            // TODO generateBankStatement function
+            clearPanel();
+            bankStatementInterface(account);
         });
 
         frame.pack();
@@ -244,20 +252,25 @@ public class GUI {
     public void transferInterface(Account account){
         JButton transferButton = new JButton("Transfer");
         JButton returnButton = new JButton("Return");
+        JLabel ibanOfAccount = new JLabel("Type the other account IBAN:");
         JLabel amountToTransfer = new JLabel("Amount to transfer");
+        JTextField ibanField = new JTextField(25);
         JTextField amountField = new JTextField(15);
 
-        addButton(returnButton, 0,1);
-        addButton(transferButton, 1, 1);
-        addComponent(amountToTransfer, 0, 0);
-        addComponent(amountField, 1,0);
+        addButton(returnButton, 0,2);
+        addButton(transferButton, 1, 2);
+        addComponent(amountToTransfer, 0, 1);
+        addComponent(amountField, 1,1);
+        addComponent(ibanOfAccount, 0, 0);
+        addComponent(ibanField,1,0);
 
         returnButton.addActionListener(e -> {
+            clearPanel();
             selectionInterface(account);
         });
 
         transferButton.addActionListener(e -> {
-            Account accountTo = this.bank.findAccount(amountField.getText());
+            Account accountTo = this.bank.findAccount(ibanField.getText());
             if (accountTo != null) {
                 Integer amount = getInt(amountField.getText());
                 if (amount > 0) {
@@ -266,6 +279,7 @@ public class GUI {
                     if (this.bank.findTransaction(transID).isCompletedTransaction()){
                         this.bank.makeTransaction(this.bank.generateTransactionID(Enums.TransactionType.TRANSFER_FROM),
                                 accountTo, account, amount, Enums.TransactionType.TRANSFER_FROM);
+                        this.bank.saveAccountsAfterTransactions();
                         JOptionPane.showMessageDialog(frame, "Transaction successful!");
                         clearPanel();
                         selectionInterface(account);
@@ -307,6 +321,7 @@ public class GUI {
                 String transID = this.bank.generateTransactionID(Enums.TransactionType.DEPOSIT);
                 this.bank.makeTransaction(transID, account, null, amount, Enums.TransactionType.DEPOSIT);
                 if(this.bank.findTransaction(transID).isCompletedTransaction()){
+                    this.bank.saveAccountsAfterTransactions();
                     JOptionPane.showMessageDialog(frame, "Deposit was successful");
                     clearPanel();
                     selectionInterface(account);
@@ -343,6 +358,7 @@ public class GUI {
                 String transID = this.bank.generateTransactionID(Enums.TransactionType.WITHDRAW);
                 this.bank.makeTransaction(transID, account, null, amount, Enums.TransactionType.WITHDRAW);
                 if (this.bank.findTransaction(transID).isCompletedTransaction()){
+                    this.bank.saveAccountsAfterTransactions();
                     JOptionPane.showMessageDialog(frame, "Transaction successful!");
                     clearPanel();
                     selectionInterface(account);

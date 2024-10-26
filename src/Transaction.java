@@ -32,9 +32,6 @@ public class Transaction {
                 transfer();
                 break;
         }
-
-        // TODO save transaction
-
     }
 
 
@@ -44,7 +41,6 @@ public class Transaction {
 
 
     private void withdraw(){
-        // TODO complete withdraw text for GUI
         if (haveEnoughMoney()) {
             accountFrom.updateBalance(-amount);
             completedTransaction = true;
@@ -57,15 +53,12 @@ public class Transaction {
 
 
     private void deposit(){
-        // TODO complete deposit text for GUI
         accountFrom.updateBalance(amount);
         completedTransaction = true;
-
     }
 
 
     private void transfer(){
-        // TODO complete transfer text for GUI
         if (haveEnoughMoney()){
             accountFrom.updateBalance(-amount);
 
@@ -75,8 +68,8 @@ public class Transaction {
             else{
                 double amountInEur = amount * accountFrom.getCurrency().getConversionRate();
                 double convertedAmount = amountInEur / accountTo.getCurrency().getConversionRate();
+                convertedAmount = Math.round(convertedAmount * 100.0) / 100.0;
                 accountTo.updateBalance(convertedAmount);
-
             }
 
             completedTransaction = true;
@@ -84,7 +77,6 @@ public class Transaction {
 
         else{
             completedTransaction = false;
-            // TODO complete else if there are not enough money to transfer
         }
     }
 
@@ -112,13 +104,16 @@ public class Transaction {
         return amount;
     }
 
+
     public boolean isCompletedTransaction() {
         return completedTransaction;
     }
 
+
     public LocalDate getDate() {
         return date;
     }
+
 
     public Enums.TransactionType getType() {
         return type;
