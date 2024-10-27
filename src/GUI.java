@@ -182,19 +182,22 @@ public class GUI {
     }
 
 
-    void bankStatementInterface(Account account){
+    public void bankStatementInterface(Account account){
         JButton returnButton = new JButton("Return");
         JTextArea textArea = new JTextArea();
         JScrollPane scrollPane = new JScrollPane(textArea);
 
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
+        textArea.setEditable(false);
+      //  textArea.setMinimumSize(new Dimension(400,300));
 
+        scrollPane.setMinimumSize(new Dimension(400,200));
+       // scrollPane.setPreferredSize(new Dimension(400,200));
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        //frame.add(scrollPane, BorderLayout.CENTER);
 
         addButton(returnButton, 0,1);
-        addComponent(textArea, 0,0);
+        addComponent(scrollPane, 0,0);
 
         returnButton.addActionListener(e -> {
             clearPanel();
@@ -206,15 +209,17 @@ public class GUI {
                     transaction.getType() == Enums.TransactionType.TRANSFER_FROM){
 
                 textArea.append(String.valueOf(transaction.getType()) + " | " + transaction.getAccountTo().getIBAN() +
-                        " | " + transaction.getAmount() + String.valueOf(transaction.getAccountFrom().getCurrency()) + " | " +
-                        transaction.getDate() + "\n");
-
+                        " | " + transaction.getAmount() + " " + String.valueOf(transaction.getAccountFrom().getCurrency())
+                        + " | " + transaction.getDate() + "\n");
             }
             else {
                 textArea.append(String.valueOf(transaction.getType()) + " | " + transaction.getAmount() +
                         String.valueOf(transaction.getAccountFrom().getCurrency()) + " | " + transaction.getDate() + "\n");
             }
         }
+
+        scrollPane.repaint();
+        scrollPane.revalidate();
 
         frame.pack();
     }
@@ -395,7 +400,7 @@ public class GUI {
     public void addComponent(JComponent component, int x, int y){
         gbc.gridx = x;
         gbc.gridy = y;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = 1.0;
         gbc.insets = new Insets(10, 0 ,10, 0);
         gbc.anchor = GridBagConstraints.CENTER;

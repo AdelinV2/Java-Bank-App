@@ -21,6 +21,7 @@ public class FileService {
                 String pin = parts[3];
                 double balance = Double.parseDouble(parts[4]);
 
+
                 Account account = new Account(username, currency, IBAN, pin, balance);
                 accountMap.put(IBAN, account);
             }
