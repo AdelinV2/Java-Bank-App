@@ -73,6 +73,6 @@ public class BankService {
         newTransaction.setTransactionID(transactionID);
         transactions.add(newTransaction);
 
-        fileService.updateTransactions(transactions);
+        fileService.updateTransactions(newTransaction);
     }
 }

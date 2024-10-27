@@ -91,7 +91,7 @@ public class FileService {
 
 
     public void saveTransactions(List<Transaction> transactions) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(trsPath))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(trsPath, true))) {
             for (Transaction transaction : transactions) {
                 if(transaction.getAccountTo() != null) {
                     bw.write(transaction.getTransactionID() + "," +
@@ -122,7 +122,32 @@ public class FileService {
     }
 
 
-    public void updateTransactions(List<Transaction> newTransactions) {
-        saveTransactions(newTransactions);
+    public void updateTransactions(Transaction transaction) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(trsPath, true))){
+            if(transaction.getAccountTo() != null) {
+                bw.write(transaction.getTransactionID() + "," +
+                        transaction.getAccountFrom().getIBAN() + "," +
+                        transaction.getAccountFrom().getCurrency() + "," +
+                        transaction.getAccountTo().getIBAN() + "," +
+                        transaction.getAccountTo().getCurrency() + "," +
+                        transaction.getAmount() + "," +
+                        transaction.getType() + "," +
+                        transaction.isCompletedTransaction() + "," +
+                        transaction.getDate());
+            }
+            else{
+                bw.write(transaction.getTransactionID() + "," +
+                        transaction.getAccountFrom().getIBAN() + "," +
+                        transaction.getAccountFrom().getCurrency() + "," +
+                        "null,null," +
+                        transaction.getAmount() + "," +
+                        transaction.getType() + "," +
+                        transaction.isCompletedTransaction()+ "," +
+                        transaction.getDate());
+            }
+            bw.newLine();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 }
