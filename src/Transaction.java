@@ -10,9 +10,10 @@ public class Transaction {
     private boolean completedTransaction;
 
 
-    public Transaction(Account accountFrom, Account accountTo,
+    public Transaction(String transactionID, Account accountFrom, Account accountTo,
                        double amount, Enums.TransactionType type)
     {
+        this.transactionID = transactionID;
         this.accountFrom = accountFrom;
         this.accountTo = accountTo;
         this.amount = amount;

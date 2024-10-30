@@ -69,8 +69,7 @@ public class BankService {
     public void makeTransaction(String transactionID, Account accountFrom, Account accountTo,
                                 double amount, Enums.TransactionType type)
     {
-        Transaction newTransaction = new Transaction(accountFrom, accountTo, amount, type);
-        newTransaction.setTransactionID(transactionID);
+        Transaction newTransaction = new Transaction(transactionID, accountFrom, accountTo, amount, type);
         transactions.add(newTransaction);
 
         fileService.updateTransactions(newTransaction);

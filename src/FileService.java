@@ -80,7 +80,7 @@ public class FileService {
                 double amount = Double.parseDouble(parts[5]);
                 Enums.TransactionType type = Enums.TransactionType.valueOf(parts[6]);
                 boolean completed = Boolean.parseBoolean(parts[7]);
-                Transaction transaction = new Transaction(accountFrom, accountTo, amount, type);
+                Transaction transaction = new Transaction(transactionID, accountFrom, accountTo, amount, type);
                 transactions.add(transaction);
             }
         } catch (IOException e) {
