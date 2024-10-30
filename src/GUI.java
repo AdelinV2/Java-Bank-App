@@ -190,10 +190,8 @@ public class GUI {
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         textArea.setEditable(false);
-      //  textArea.setMinimumSize(new Dimension(400,300));
 
         scrollPane.setMinimumSize(new Dimension(400,200));
-       // scrollPane.setPreferredSize(new Dimension(400,200));
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
         addButton(returnButton, 0,1);
